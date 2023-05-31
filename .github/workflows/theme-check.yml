@@ -1,8 +1,7 @@
 name: Shopify Theme Check
 
 on:
-  pull_request:
-    branches: [ develop ]
+  workflow_call:
   
 jobs:
   shopify_check:    
