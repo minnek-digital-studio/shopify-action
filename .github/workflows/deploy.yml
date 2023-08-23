@@ -1,0 +1,39 @@
+name: Deploy to Shopify
+on:
+  workflow_call:
+jobs:
+  changes_check:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.changes.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check Files Changed
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            deploy:
+              - './sections/**'
+              - './assets/**'
+              - './config/**'
+              - './layout/**'
+              - './locales/**'
+              - './snippets/**'
+              - './templates/**'
+              - './package.json'
+  deploy-to-production:
+    if: github.ref == 'refs/heads/master' && needs.changes_check.outputs.deploy == 'true'
+    name: Shopify
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - uses: actions/checkout@v1
+      - name: Shopify
+        uses: pgrimaud/action-shopify@master
+        env:
+          SHOPIFY_PASSWORD: ${{ secrets.SHOPIFY_PASSWORD }}
+          SHOPIFY_STORE_URL: ${{ secrets.SHOPIFY_STORE_URL }}
+          SHOPIFY_THEME_ID: ${{ secrets.SHOPIFY_THEME_ID }}
+          THEME_PATH: ./
