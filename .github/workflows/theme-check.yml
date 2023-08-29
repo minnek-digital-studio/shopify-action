@@ -2,18 +2,32 @@ name: Shopify Theme Check
 
 on:
   workflow_call:
-  
-jobs:
-  shopify_check:    
 
+jobs:
+  shopify_check:
     runs-on: ubuntu-latest
-    
+    outputs:
+      deploy: ${{ steps.changes.outputs.deploy }}
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v3
+
       - name: Shopify Check
         uses: shopify/theme-check-action@v1
         with:
           theme_root: '.'
           token: ${{ github.token }}
+  deploy_preview:
+    if: github.ref == 'refs/heads/master' && needs.shopify_check.outputs.deploy == 'true'
+    needs: shopify_check
+    name: Deploy Preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Theme Deploy Preview'
+        uses: wyugen/shopify-theme-action@v1
+        with:
+          SHOPIFY_STORE: ${{secrets.DP_SHOPIFY_STORE}}
+          SHOPIFY_APP_PW: ${{secrets.DP_SHOPIFY_APP_PW}}
+          SHOPIFY_API_KEY: ${{secrets.DP_SHOPIFY_API_KEY}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
