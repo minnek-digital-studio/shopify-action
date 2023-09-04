@@ -18,7 +18,6 @@ jobs:
         with:
           theme_root: '.'
           token: ${{ github.token }}
-
       - name: 'Theme Deploy Preview'
         uses: wyugen/shopify-theme-action@v1
         with:
