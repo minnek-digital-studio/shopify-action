@@ -6,8 +6,6 @@ on:
 jobs:
   shopify_check:
     runs-on: ubuntu-latest
-    outputs:
-      deploy: ${{ steps.changes.outputs.deploy }}
 
     steps:
       - name: Checkout code
@@ -19,7 +17,8 @@ jobs:
           theme_root: '.'
           token: ${{ github.token }}
   deploy_preview:
-    if: github.ref == 'refs/heads/master' && needs.shopify_check.outputs.deploy == 'true'
+    environment:
+      name: staging
     needs: shopify_check
     name: Deploy Preview
     runs-on: ubuntu-latest
