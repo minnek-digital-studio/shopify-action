@@ -4,11 +4,13 @@ on:
   workflow_call:
 
 jobs:
-  shopify_check:
+  deploy_preview:
+    environment:
+      name: staging
+    name: Deploy Preview
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Shopify Check
@@ -16,13 +18,7 @@ jobs:
         with:
           theme_root: '.'
           token: ${{ github.token }}
-  deploy_preview:
-    environment:
-      name: staging
-    needs: shopify_check
-    name: Deploy Preview
-    runs-on: ubuntu-latest
-    steps:
+
       - name: 'Theme Deploy Preview'
         uses: wyugen/shopify-theme-action@v1
         with:
