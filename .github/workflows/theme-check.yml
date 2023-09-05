@@ -23,6 +23,9 @@ jobs:
     name: Deploy Preview
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: 'Theme Deploy Preview'
         uses: wyugen/shopify-theme-action@v1
         with:
