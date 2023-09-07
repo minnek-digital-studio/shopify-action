@@ -1,34 +1,13 @@
-name: Shopify Theme Check
-
-on:
-  workflow_call:
-
+name: Theme Check
+on: [push]
 jobs:
-  shopify_check:
+  theme_check:
+    name: Theme Check
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Shopify Check
+      - uses: actions/checkout@v3
+      - name: Theme Check
         uses: shopify/theme-check-action@v1
         with:
-          theme_root: '.'
+          theme_root: '.' # optional, could be './dist'
           token: ${{ github.token }}
-  deploy_preview:
-    environment:
-      name: staging
-    needs: shopify_check
-    name: Deploy Preview
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: 'Theme Deploy Preview'
-        uses: wyugen/shopify-theme-action@v1
-        with:
-          SHOPIFY_STORE: ${{secrets.DP_SHOPIFY_STORE}}
-          SHOPIFY_APP_PW: ${{secrets.DP_SHOPIFY_APP_PW}}
-          SHOPIFY_API_KEY: ${{secrets.DP_SHOPIFY_API_KEY}}
-          github-token: ${{secrets.GITHUB_TOKEN}}
