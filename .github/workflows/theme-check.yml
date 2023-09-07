@@ -1,13 +1,19 @@
-name: Theme Check
-on: [push]
+name: Shopify Theme Check
+
+on:
+  workflow_call:
+
 jobs:
-  theme_check:
-    name: Theme Check
+  shopify_check:
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Theme Check
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Shopify Check
         uses: shopify/theme-check-action@v1
         with:
-          theme_root: '.' # optional, could be './dist'
+          theme_root: '.'
           token: ${{ github.token }}
